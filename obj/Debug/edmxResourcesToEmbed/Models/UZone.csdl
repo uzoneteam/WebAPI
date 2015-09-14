@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="uzoneModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityType Name="EventLocation">
+    <Key>
+      <PropertyRef Name="EventLocationID" />
+    </Key>
+    <Property Name="EventLocationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventLocationName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SchoolID" Type="Int64" Nullable="false" />
+    <Property Name="Active" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Schedulers" Relationship="Self.fk_LocationScheduler" FromRole="EventLocation" ToRole="Scheduler" />
+    <NavigationProperty Name="School" Relationship="Self.fk_LocationSchool" FromRole="EventLocation" ToRole="School" />
+  </EntityType>
+  <EntityType Name="LockedQuestion">
+    <Key>
+      <PropertyRef Name="LockedQuestionID" />
+    </Key>
+    <Property Name="LockedQuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Question" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="RegisteredUsers" Relationship="Self.fk_User_LockedQuestion" FromRole="LockedQuestion" ToRole="RegisteredUser" />
+  </EntityType>
+  <EntityType Name="RegisteredUser">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserRoleID" Type="Int32" Nullable="false" />
+    <Property Name="SchoolID" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="NumAttempts" Type="Int32" />
+    <Property Name="LockedQuestionID" Type="Int32" Nullable="false" />
+    <Property Name="LockedAnswer" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="LockedQuestion" Relationship="Self.fk_User_LockedQuestion" FromRole="RegisteredUser" ToRole="LockedQuestion" />
+    <NavigationProperty Name="UserRole" Relationship="Self.fk_User_Role" FromRole="RegisteredUser" ToRole="UserRole" />
+    <NavigationProperty Name="School" Relationship="Self.fk_User_School" FromRole="RegisteredUser" ToRole="School" />
+  </EntityType>
+  <EntityType Name="Scheduler">
+    <Key>
+      <PropertyRef Name="SchedulerID" />
+    </Key>
+    <Property Name="SchedulerID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventStart" Type="DateTime" Precision="3" />
+    <Property Name="EventEnd" Type="DateTime" Precision="3" />
+    <Property Name="EventDescription" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="EventSubject" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+    <Property Name="EventLocationID" Type="Int32" />
+    <Property Name="SchoolID" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="EventLocation" Relationship="Self.fk_LocationScheduler" FromRole="Scheduler" ToRole="EventLocation" />
+    <NavigationProperty Name="School" Relationship="Self.fk_SchoolScheduler" FromRole="Scheduler" ToRole="School" />
+  </EntityType>
+  <EntityType Name="School">
+    <Key>
+      <PropertyRef Name="SchoolID" />
+    </Key>
+    <Property Name="SchoolID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Alias" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Mascot" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Zip" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ButtonColor" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="BannerColor" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="LogoLocation" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="EventLocations" Relationship="Self.fk_LocationSchool" FromRole="School" ToRole="EventLocation" />
+    <NavigationProperty Name="RegisteredUsers" Relationship="Self.fk_User_School" FromRole="School" ToRole="RegisteredUser" />
+    <NavigationProperty Name="Schedulers" Relationship="Self.fk_SchoolScheduler" FromRole="School" ToRole="Scheduler" />
+  </EntityType>
+  <EntityType Name="UserRole">
+    <Key>
+      <PropertyRef Name="UserRoleID" />
+    </Key>
+    <Property Name="UserRoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserRoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="RegisteredUsers" Relationship="Self.fk_User_Role" FromRole="UserRole" ToRole="RegisteredUser" />
+  </EntityType>
+  <Association Name="fk_LocationScheduler">
+    <End Role="EventLocation" Type="Self.EventLocation" Multiplicity="0..1" />
+    <End Role="Scheduler" Type="Self.Scheduler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EventLocation">
+        <PropertyRef Name="EventLocationID" />
+      </Principal>
+      <Dependent Role="Scheduler">
+        <PropertyRef Name="EventLocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_LocationSchool">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="EventLocation" Type="Self.EventLocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="EventLocation">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_LockedQuestion">
+    <End Role="LockedQuestion" Type="Self.LockedQuestion" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LockedQuestion">
+        <PropertyRef Name="LockedQuestionID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="LockedQuestionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_Role">
+    <End Role="UserRole" Type="Self.UserRole" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserRole">
+        <PropertyRef Name="UserRoleID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="UserRoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_School">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_SchoolScheduler">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="Scheduler" Type="Self.Scheduler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="Scheduler">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="uzoneEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="EventLocations" EntityType="Self.EventLocation" />
+    <EntitySet Name="LockedQuestions" EntityType="Self.LockedQuestion" />
+    <EntitySet Name="RegisteredUsers" EntityType="Self.RegisteredUser" />
+    <EntitySet Name="Schedulers" EntityType="Self.Scheduler" />
+    <EntitySet Name="Schools" EntityType="Self.School" />
+    <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
+    <AssociationSet Name="fk_LocationScheduler" Association="Self.fk_LocationScheduler">
+      <End Role="EventLocation" EntitySet="EventLocations" />
+      <End Role="Scheduler" EntitySet="Schedulers" />
+    </AssociationSet>
+    <AssociationSet Name="fk_LocationSchool" Association="Self.fk_LocationSchool">
+      <End Role="School" EntitySet="Schools" />
+      <End Role="EventLocation" EntitySet="EventLocations" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_LockedQuestion" Association="Self.fk_User_LockedQuestion">
+      <End Role="LockedQuestion" EntitySet="LockedQuestions" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUsers" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_Role" Association="Self.fk_User_Role">
+      <End Role="UserRole" EntitySet="UserRoles" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUsers" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_School" Association="Self.fk_User_School">
+      <End Role="School" EntitySet="Schools" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUsers" />
+    </AssociationSet>
+    <AssociationSet Name="fk_SchoolScheduler" Association="Self.fk_SchoolScheduler">
+      <End Role="School" EntitySet="Schools" />
+      <End Role="Scheduler" EntitySet="Schedulers" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

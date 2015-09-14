@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="uzoneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityType Name="EventLocation">
+    <Key>
+      <PropertyRef Name="EventLocationID" />
+    </Key>
+    <Property Name="EventLocationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventLocationName" Type="nvarchar" MaxLength="75" Nullable="false" />
+    <Property Name="SchoolID" Type="bigint" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LockedQuestion">
+    <Key>
+      <PropertyRef Name="LockedQuestionID" />
+    </Key>
+    <Property Name="LockedQuestionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Question" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RegisteredUser">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserRoleID" Type="int" Nullable="false" />
+    <Property Name="SchoolID" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="25" Nullable="false" />
+    <Property Name="IsLocked" Type="bit" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="NumAttempts" Type="int" />
+    <Property Name="LockedQuestionID" Type="int" Nullable="false" />
+    <Property Name="LockedAnswer" Type="nvarchar" MaxLength="150" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Scheduler">
+    <Key>
+      <PropertyRef Name="SchedulerID" />
+    </Key>
+    <Property Name="SchedulerID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventStart" Type="datetime" />
+    <Property Name="EventEnd" Type="datetime" />
+    <Property Name="EventDescription" Type="nvarchar" MaxLength="250" />
+    <Property Name="EventSubject" Type="nvarchar" MaxLength="75" />
+    <Property Name="EventLocationID" Type="int" />
+    <Property Name="SchoolID" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="School">
+    <Key>
+      <PropertyRef Name="SchoolID" />
+    </Key>
+    <Property Name="SchoolID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Alias" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Mascot" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Address" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="City" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="State" Type="nvarchar" MaxLength="3" Nullable="false" />
+    <Property Name="Zip" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="15" Nullable="false" />
+    <Property Name="ButtonColor" Type="nvarchar" MaxLength="20" />
+    <Property Name="BannerColor" Type="nvarchar" MaxLength="20" />
+    <Property Name="LogoLocation" Type="nvarchar" MaxLength="300" />
+  </EntityType>
+  <EntityType Name="UserRole">
+    <Key>
+      <PropertyRef Name="UserRoleID" />
+    </Key>
+    <Property Name="UserRoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserRoleName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="fk_LocationScheduler">
+    <End Role="EventLocation" Type="Self.EventLocation" Multiplicity="0..1" />
+    <End Role="Scheduler" Type="Self.Scheduler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EventLocation">
+        <PropertyRef Name="EventLocationID" />
+      </Principal>
+      <Dependent Role="Scheduler">
+        <PropertyRef Name="EventLocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_LocationSchool">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="EventLocation" Type="Self.EventLocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="EventLocation">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_SchoolScheduler">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="Scheduler" Type="Self.Scheduler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="Scheduler">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_LockedQuestion">
+    <End Role="LockedQuestion" Type="Self.LockedQuestion" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LockedQuestion">
+        <PropertyRef Name="LockedQuestionID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="LockedQuestionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_Role">
+    <End Role="UserRole" Type="Self.UserRole" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserRole">
+        <PropertyRef Name="UserRoleID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="UserRoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_School">
+    <End Role="School" Type="Self.School" Multiplicity="1" />
+    <End Role="RegisteredUser" Type="Self.RegisteredUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolID" />
+      </Principal>
+      <Dependent Role="RegisteredUser">
+        <PropertyRef Name="SchoolID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="uzoneModelStoreContainer">
+    <EntitySet Name="EventLocation" EntityType="Self.EventLocation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LockedQuestion" EntityType="Self.LockedQuestion" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RegisteredUser" EntityType="Self.RegisteredUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Scheduler" EntityType="Self.Scheduler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="School" EntityType="Self.School" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="fk_LocationScheduler" Association="Self.fk_LocationScheduler">
+      <End Role="EventLocation" EntitySet="EventLocation" />
+      <End Role="Scheduler" EntitySet="Scheduler" />
+    </AssociationSet>
+    <AssociationSet Name="fk_LocationSchool" Association="Self.fk_LocationSchool">
+      <End Role="School" EntitySet="School" />
+      <End Role="EventLocation" EntitySet="EventLocation" />
+    </AssociationSet>
+    <AssociationSet Name="fk_SchoolScheduler" Association="Self.fk_SchoolScheduler">
+      <End Role="School" EntitySet="School" />
+      <End Role="Scheduler" EntitySet="Scheduler" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_LockedQuestion" Association="Self.fk_User_LockedQuestion">
+      <End Role="LockedQuestion" EntitySet="LockedQuestion" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUser" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_Role" Association="Self.fk_User_Role">
+      <End Role="UserRole" EntitySet="UserRole" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUser" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_School" Association="Self.fk_User_School">
+      <End Role="School" EntitySet="School" />
+      <End Role="RegisteredUser" EntitySet="RegisteredUser" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
