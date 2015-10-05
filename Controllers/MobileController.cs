@@ -60,17 +60,39 @@ namespace PromotionServices_WebAPI.Models
             int viewingMonth = Convert.ToInt32(month);
             using (var context = new uzoneEntities())
             {
-                _scheduler = (from s in context.Schedulers
+                var result = (from s in context.Schedulers
                               where s.SchoolID == sID &&
                               s.EventStart.Value.Month == viewingMonth &&
                               s.EventStart.Value.Year == DateTime.Now.Year 
-                              //s.EventStart >= DateTime.Now
-                              select s).ToList();
+                              orderby s.EventStart
+                              select new SchedulerFormatted()
+                              {
+                                  SchedulerID = s.SchedulerID,
+                                  SchoolID = s.SchoolID,
+                                  EventStart = s.EventStart,
+                                  EventEnd = s.EventEnd,
+                                  EventDescription = s.EventDescription,
+                                  EventSubject = s.EventSubject,
+                                  EventLocationID = s.EventLocationID
+                              })
+                             .ToList()
+                             .Select(x => new SchedulerFormatted()
+                             {
+                                 SchedulerID = x.SchedulerID,
+                                 SchoolID = x.SchoolID,
+                                 EventStart = x.EventStart,
+                                 EventEnd = x.EventEnd,
+                                 EventDescription = x.EventDescription,
+                                 EventSubject = x.EventSubject,
+                                 EventLocationID = x.EventLocationID,
+                                 EventStartFormatted = string.Format("{0:dddd, MMMM d, yyyy}", x.EventStart)
+                             });
 
-                if (_scheduler.Count == 0)
+
+                if (!result.Any())
                     return Request.CreateResponse(HttpStatusCode.NotFound);
 
-                return Request.CreateResponse(HttpStatusCode.OK,  _scheduler );
+                return Request.CreateResponse(HttpStatusCode.OK,  result );
             }
         }
 
@@ -84,22 +106,43 @@ namespace PromotionServices_WebAPI.Models
         [GET("events/{schoolID}")]
         public HttpResponseMessage GetSchoolCurrentEvents([FromUri] string schoolID)
         {
-            List<Scheduler> _scheduler = null;
             long sID = Convert.ToInt64(schoolID);
             int currentMonth = DateTime.Now.Month;
             using (var context = new uzoneEntities())
             {
-                _scheduler = (from s in context.Schedulers
+                var result = (from s in context.Schedulers
                               where s.SchoolID == sID &&
                               s.EventStart.Value.Month == currentMonth &&
                               s.EventStart.Value.Year == DateTime.Now.Year &&
                               s.EventStart >= DateTime.Now
-                              select s).ToList();
+                              orderby s.EventStart
+                              select new SchedulerFormatted()
+                              {
+                                  SchedulerID = s.SchedulerID,
+                                  SchoolID = s.SchoolID,
+                                  EventStart = s.EventStart,
+                                  EventEnd = s.EventEnd,
+                                  EventDescription = s.EventDescription,
+                                  EventSubject = s.EventSubject,
+                                  EventLocationID = s.EventLocationID
+                              })
+                             .ToList()
+                             .Select(x => new SchedulerFormatted()
+                             {
+                                 SchedulerID = x.SchedulerID,
+                                 SchoolID = x.SchoolID,
+                                 EventStart = x.EventStart,
+                                 EventEnd = x.EventEnd,
+                                 EventDescription = x.EventDescription,
+                                 EventSubject = x.EventSubject,
+                                 EventLocationID = x.EventLocationID,
+                                 EventStartFormatted = string.Format("{0:dddd, MMMM d, yyyy}", x.EventStart)
+                             });
 
-                if (_scheduler.Count == 0)
-                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                if (!result.Any())
+                   return Request.CreateResponse(HttpStatusCode.NotFound);
 
-                return Request.CreateResponse(HttpStatusCode.OK, _scheduler);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
         }
 

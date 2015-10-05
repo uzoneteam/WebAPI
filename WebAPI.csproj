@@ -200,6 +200,7 @@
     <Compile Include="Models\Scheduler.cs">
       <DependentUpon>Uzone.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SchedulerFormatted.cs" />
     <Compile Include="Models\School.cs">
       <DependentUpon>Uzone.tt</DependentUpon>
     </Compile>
