@@ -69,8 +69,6 @@ namespace PromotionServices_WebAPI.Models
                               {
                                   SchedulerID = s.SchedulerID,
                                   SchoolID = s.SchoolID,
-                                  EventStart = s.EventStart,
-                                  EventEnd = s.EventEnd,
                                   EventDescription = s.EventDescription,
                                   EventSubject = s.EventSubject,
                                   EventLocationID = s.EventLocationID
@@ -80,8 +78,8 @@ namespace PromotionServices_WebAPI.Models
                              {
                                  SchedulerID = x.SchedulerID,
                                  SchoolID = x.SchoolID,
-                                 EventStart = x.EventStart,
-                                 EventEnd = x.EventEnd,
+                                 EventStart = string.Format("{0:MMMM d, yyyy H:mm}", x.EventStart),
+                                 EventEnd = string.Format("{0:MMMM d, yyyy H:mm}", x.EventEnd),
                                  EventDescription = x.EventDescription,
                                  EventSubject = x.EventSubject,
                                  EventLocationID = x.EventLocationID,
@@ -120,8 +118,6 @@ namespace PromotionServices_WebAPI.Models
                               {
                                   SchedulerID = s.SchedulerID,
                                   SchoolID = s.SchoolID,
-                                  EventStart = s.EventStart,
-                                  EventEnd = s.EventEnd,
                                   EventDescription = s.EventDescription,
                                   EventSubject = s.EventSubject,
                                   EventLocationID = s.EventLocationID
@@ -131,8 +127,8 @@ namespace PromotionServices_WebAPI.Models
                              {
                                  SchedulerID = x.SchedulerID,
                                  SchoolID = x.SchoolID,
-                                 EventStart = x.EventStart,
-                                 EventEnd = x.EventEnd,
+                                 EventStart = string.Format("{0:MMMM d, yyyy H:mm}", x.EventStart),
+                                 EventEnd = string.Format("{0:MMMM d, yyyy H:mm}", x.EventEnd),
                                  EventDescription = x.EventDescription,
                                  EventSubject = x.EventSubject,
                                  EventLocationID = x.EventLocationID,

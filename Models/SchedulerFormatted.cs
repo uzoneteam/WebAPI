@@ -8,8 +8,8 @@ namespace WebAPI.Models
     public class SchedulerFormatted
     {
         public long SchedulerID { get; set; }
-        public DateTime? EventStart { get; set; }
-        public DateTime? EventEnd { get; set; }
+        public string EventStart { get; set; }
+        public string EventEnd { get; set; }
         public string EventDescription { get; set; }
         public string EventSubject { get; set; }
         public int? EventLocationID { get; set; }
